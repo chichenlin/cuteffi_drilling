@@ -455,7 +455,7 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox1.Location = new System.Drawing.Point(220, 187);
+            this.textBox1.Location = new System.Drawing.Point(220, 142);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 33);
             this.textBox1.TabIndex = 8;
@@ -485,7 +485,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label11.Location = new System.Drawing.Point(139, 190);
+            this.label11.Location = new System.Drawing.Point(139, 145);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(48, 24);
             this.label11.TabIndex = 5;

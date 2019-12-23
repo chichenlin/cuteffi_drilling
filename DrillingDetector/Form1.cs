@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using NationalInstruments.DAQmx;
 using NationalInstruments;
 using System.Diagnostics;
+using System.IO;
 
 namespace DrillingDetector
 {
@@ -28,7 +29,12 @@ namespace DrillingDetector
         private AnalogWaveform<double>[] data;
 
         private int indexSettingPanel = 0;
-        
+        public StreamWriter SW_RMSData;
+        public StreamWriter SW_State;
+        public StreamWriter SW_State2;
+        public StreamWriter SW_RawData;
+        public double[] vecTime,xdata,ydata,zdata;
+        public double rms_xdata, rms_ydata, rms_zdata;
 
 
         public CUTeffi_DrillingModule()
@@ -40,7 +46,7 @@ namespace DrillingDetector
             label4.Text = " ";
             label9.Text = " ";
             label15.Text = " ";
-            StartSampling();
+            //StartSampling();
             pictureBox3.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_ButtonTestStart.png");
             pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_graylight.png");
 
@@ -54,6 +60,10 @@ namespace DrillingDetector
             terminalConfiguration = (AITerminalConfiguration)(-1);
             excitationSource = AIExcitationSource.Internal;
             inputCoupling = AICoupling.AC;
+            //SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RMSData.txt");
+            //SW_State = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State.txt");
+            //SW_State2 = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State2.txt");
+            //SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RawData.txt");
 
             myTask = new NationalInstruments.DAQmx.Task();
             AIChannel aiChannel;
@@ -68,7 +78,7 @@ namespace DrillingDetector
             {
                 if (chan[i] == 1)
                 {
-                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ2Mod1/ai" + Convert.ToString(i), "",
+                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ1Mod1/ai" + Convert.ToString(i), "",
                         terminalConfiguration, Vmin, Vmax, sen, sensitivityUnits, excitationSource,
                         EVN, AIAccelerationUnits.G);
                     aiChannel.Coupling = inputCoupling;
@@ -94,8 +104,6 @@ namespace DrillingDetector
         {
             //Stopwatch sw = new Stopwatch();
             //sw.Start();
-
-
             if (runningTask != null && runningTask == ar.AsyncState)
             {
                 // Read the available data from the channels
@@ -103,11 +111,11 @@ namespace DrillingDetector
                 int numdata = data.Length;
 
                 //double[] logData = new double[data[0].SampleCount];
-                double[] vecTime = new double[data[0].SampleCount];
+                vecTime = new double[data[0].SampleCount];
 
-                double[] xdata = data[0].GetRawData();
-                double[] ydata = data[1].GetRawData();
-                double[] zdata = data[2].GetRawData();
+                xdata = data[0].GetRawData();
+                ydata = data[1].GetRawData();
+                zdata = data[2].GetRawData();
                 //logData1 = data[0].GetRawData();
                 PrecisionDateTime[] T = data[0].GetPrecisionTimeStamps();
 
@@ -115,41 +123,32 @@ namespace DrillingDetector
                 {
                     vecTime[i] = T[i].TimeOfDay.TotalSeconds;
                 }
-                double varFs = 1 / ((vecTime[data[0].SampleCount - 1] - vecTime[0]) / (data[0].SampleCount - 1));
+                //double varFs = 1 / ((vecTime[data[0].SampleCount - 1] - vecTime[0]) / (data[0].SampleCount - 1));
                 //double varFs2 = 1 / (vecTime[1] - vecTime[0]);
 
                 analogInReader.BeginMemoryOptimizedReadWaveform(Convert.ToInt32(1280),
                     analogCallback, myTask, data);
 
-                double rms_xdata = rootMeanSquare(xdata);
-                double rms_zdata = rootMeanSquare(zdata);
-                aGauge1.Value = Convert.ToSingle(rms_zdata);
+                rms_xdata = rootMeanSquare(xdata);
+                rms_ydata = rootMeanSquare(ydata);
+                rms_zdata = rootMeanSquare(zdata);
+                //aGauge1.Value = Convert.ToSingle(rms_zdata);
 
-                if (rms_xdata > 0.2)
-                {
-                    if (rms_zdata > rms_xdata)
-                    {
-                        if (rms_zdata > Convert.ToDouble(textBox1.Text))
-                        {
-                            processRed();
-                            //Z軸停止
-                            //紀錄XY軸資訊
-                            //Z軸上升
-                            //Spindle stop
-                            //移動X、Y軸至門口
-                            Optmization();
-                        }
-                    }
-                    else
-                    {
-                        processGreen();
-                    }
-                }
+                
 
                 //sw.Stop();
                 //TimeSpan ts2 = sw.Elapsed;
                 //int A = 1;
             }
+        }
+        private void Stopsampling()
+        {
+            SW_RMSData.Dispose();
+            SW_State.Dispose();
+            SW_State2.Dispose();
+            SW_RawData.Dispose();
+            runningTask = null;
+            myTask.Dispose();
         }
 
         //--------------------------------------------------------------------------------------------------------------//
@@ -210,13 +209,135 @@ namespace DrillingDetector
             pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_yellowlight.png");
             aGauge1.Value = 8.4F;
         }
-        private static void Optmization()
+        private void CUTeffi_opt()
         {
+            double SPmax = Convert.ToDouble(textBox4.Text);
+            textBox2.Text = ""+Convert.ToDouble(textBox4.Text) * 0.5;
             //移動至指定XY座標
             //小助手優化程序
+            StartSampling();
+            int iii = 0;
+            int indexP = 0;
+            SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RMSData.txt");
+            SW_State = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State.txt");
+            SW_State2 = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State2.txt");
+            SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RawData.txt");
+
+            double[] vecSP = new double[14];
+            //double[] vecSP2 = new double[] { 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
+            double[] vecSP2 = new double[] { 0, 0, 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
+            //for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 14; i++)
+            {
+                vecSP[i] = SPmax - vecSP2[i];//---------------------------------------------------------------------------------------------
+                vecSP[0] = 3183;
+                vecSP[1] = 3183;
+            }
+
+            if (rms_zdata > 0.25 ) // 閥值定義：轉與不轉振動量大小 && entropy[0] < threshold_entropy
+            {
+
+                if (iii == 3)//穩定大於閥值0.3秒後，紀錄當下時間
+                {
+                    SW_State.WriteLine(vecTime[0]);
+                    SW_State2.WriteLine("start");
+                    Console.WriteLine("start");
+                }
+                iii++;
+
+                //Console.Write(indexP + "  " + vecTime[0] + "  " + rms_vibration + " ");
+            }
+            else
+            {
+                if (iii >= 3)//小於閥值後，紀錄切削結束時間
+                {
+                    iii = 0;
+                    indexP++;
+                    SW_State.WriteLine(vecTime[0] - 0.1);
+                    SW_State2.WriteLine("stop");
+                    Console.WriteLine("Spindle stop now");
+
+                }
+                else
+                {
+                    Console.WriteLine("Spindle will spin up in few seconds ");
+                }
+            }
+            if (indexP == vecSP.Length)//當indexP超過最後一個切削轉速後，停止擷取程式、記錄結束時間、進行最佳化
+            {
+                SW_State.WriteLine(vecTime[0] - 0.1);
+                SW_State2.WriteLine("end");
+                Stopsampling();
+                Optmization();
+                return;
+            }
+            Console.Write(indexP + "  " + vecSP[indexP] + "  " + vecTime[0] + "  " + rms_zdata + " " + iii + " ");
+            //存檔區
+            SW_RMSData.Write(vecTime[0]);
+            SW_RMSData.Write(",");
+            SW_RMSData.Write(vecSP[indexP]);
+            SW_RMSData.Write(",");
+            SW_RMSData.WriteLine(rms_zdata);
+       
+            for (int i = 0; i < xdata.Length; i++)
+            {
+                SW_RawData.Write(vecTime[i]);
+                SW_RawData.Write(",");
+                SW_RawData.Write(xdata[i]);
+                SW_RawData.Write(",");
+                SW_RawData.Write(ydata[i]);
+                SW_RawData.Write(",");
+                SW_RawData.WriteLine(zdata[i]);
+            }
+            //存檔區結束
+
             //輸出轉速、進給
         }
+        private void Optmization()
+        { 
 
-
+        }
+       
+        
+        private void Minotor()
+        {
+            SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\ "+ DateTime.Now.ToString("yyyy - MM - dd HH - mm - ss") + "_" +"RMSData.txt");
+            SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\" + DateTime.Now.ToString("yyyy - MM - dd HH - mm - ss") + "_" + "RawData.txt");
+            StartSampling();
+            aGauge1.Value = Convert.ToSingle(rms_zdata);
+            //及時監控
+            if (rms_xdata > 0.2)
+            {
+                if (rms_zdata > rms_xdata)
+                {
+                    if (rms_zdata > Convert.ToDouble(textBox1.Text))
+                    {
+                        processRed();
+                        Stopsampling();
+                        Move_Spindle();
+                        return;
+                    }
+                }
+                else
+                {
+                    processGreen();
+                }
+            }
+        }
+        private static void Move_Spindle()
+        {
+            //Z軸Feed = 0
+            //Z軸往上拉
+            //Spindle Rotation = 0
+            //紀錄X、Y座標
+            //移動X、Y軸至門口
+        }
+        private static void Avoid_touch()
+        {
+            //輸入工件幾何
+            //讀取NC code(平台移動、主軸下降)
+            //辨識路徑是否干涉
+            //if干涉 Alarm
+        }
     }
 }
