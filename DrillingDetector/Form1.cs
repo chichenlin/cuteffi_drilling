@@ -209,6 +209,21 @@ namespace DrillingDetector
             pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_yellowlight.png");
             aGauge1.Value = 8.4F;
         }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked==true)
+            {
+                CUTeffi_opt();
+            }
+            else
+            {
+                Monitor();
+            }
+            
+            
+        }
+
         private void CUTeffi_opt()
         {
             double SPmax = Convert.ToDouble(textBox4.Text);
@@ -294,12 +309,133 @@ namespace DrillingDetector
             //輸出轉速、進給
         }
         private void Optmization()
-        { 
+        {
+            double SPmax = Convert.ToDouble(textBox4.Text);
+            //------------------------------------- Read log_State ---------------------------------------//
+            int counter1 = 0;
+            string line1;
+            StreamReader SR_State = new StreamReader(System.Environment.CurrentDirectory + "\\logdata\\State.txt");
+            List<double> DataRead1 = new List<double>();
 
+            while ((line1 = SR_State.ReadLine()) != null)
+            {
+                DataRead1.Add(Convert.ToDouble(line1));
+                //Console.WriteLine(DataRead[counter]);
+                counter1++;
+            }
+            double[] vecState = new double[counter1];
+
+
+
+            for (int i = 0; i < vecState.Length; i++)//counter1
+            {
+                vecState[i] = DataRead1[i];
+            }
+            //------------------------------------- Read log_RMSData ---------------------------------------//
+            int counter = 0;
+            string line;
+            StreamReader SR_RMSData = new StreamReader(System.Environment.CurrentDirectory + "\\logData\\RMSData.txt");
+            List<List<double>> DataRead = new List<List<double>>();
+
+            while ((line = SR_RMSData.ReadLine()) != null)
+            {
+                string[] split;
+                split = line.Split(new char[] { ',' });
+                DataRead.Add(new List<double>() { Convert.ToDouble(split[0]), Convert.ToDouble(split[1]),
+                    Convert.ToDouble(split[2]) });
+                //Console.WriteLine(DataRead[counter]);
+                counter++;
+            }
+            double[] vecTime = new double[counter];
+            double[] SpindleSpeed = new double[counter];
+            double[] RMSData = new double[counter];
+
+
+            for (int i = 0; i < counter; i++)
+            {
+                vecTime[i] = DataRead[i][0];
+                SpindleSpeed[i] = DataRead[i][1];
+                RMSData[i] = DataRead[i][2];
+            }
+            SR_RMSData.Dispose();
+            SR_RMSData.Close();
+
+            SR_State.Close();
+            //------------------------------------- Spindle speed optimization ---------------------------------------//
+            //int indexMaterial = CUTeffiForm.indexMaterial;
+            //double[] vecSP = new double[12];
+            double[] vecSP = new double[14];
+            //if (indexMaterial == 1)
+            //{
+                //double[] vecSP2 = new double[] { 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
+                double[] vecSP2 = new double[] { 0, 0, 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
+                //for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 14; i++)
+                {
+                    vecSP[i] = SPmax - vecSP2[i];//---------------------------------------------------------------------------------------------
+                    vecSP[0] = 3183;
+                    vecSP[1] = 3183;
+                }
+            //}
+            //else if (indexMaterial == 2)
+            //{
+            //    //double[] vecSP2 = new double[] { 0, 1600, 600, 2000, 200, 1400, 800, 2200, 1000, 1800, 1200, 400 };
+            //    double[] vecSP2 = new double[] { 0, 0, 0, 1600, 600, 2000, 200, 1400, 800, 2200, 1000, 1800, 1200, 400 };
+            //    //for (int i = 0; i < 12; i++)
+            //    for (int i = 0; i < 13; i++)
+            //    {
+            //        vecSP[i] = SPmax - vecSP2[i];//---------------------------------------------------------------------------------------------
+            //        vecSP[0] = 3000;
+            //        vecSP[1] = 3000;
+            //    }
+            //}
+            //double[] vecSP = new double[12];//-------------------------------------------------------------------------------------------------
+            int[] vecLoc = new int[vecState.Length - 5];
+            //for (int i = 12; i >= 1; i--)
+            //{
+            //    vecSP[i - 1] = maxSP - 250 * (13 - i - 1);
+            //}
+
+            for (int i = 4; i < vecState.Length - 1; i++)
+            {
+                vecLoc[i - 4] = Array.IndexOf(vecTime, vecState[i]); ;
+            }
+
+            double[] Crms = new double[vecSP.Length - 2];
+            for (int i = 0; i < vecSP.Length - 2; i++)//vecSP.Length
+            {
+                int varRange = vecLoc[2 * i + 1] - vecLoc[2 * i]; //stop index - start index
+                int varLoc1 = Convert.ToInt32(Math.Floor(varRange * 0.8));
+                int varLoc2 = Convert.ToInt32(Math.Floor(varRange * 0.1));
+                double[] arrayA = new double[varLoc1 - varLoc2 + 1];
+                Array.Copy(RMSData, vecLoc[2 * i] + varLoc2, arrayA, 0, varLoc1 - varLoc2 + 1);
+                //Array.Copy(RMSData, vecLoc[i] - varLoc1, arrayA, 0, varLoc1 - varLoc2 + 1);
+                double varA = rootMeanSquare(arrayA);
+                Crms[i] = varA;
+            }
+
+            //double[] OptimizedSP = new double[4];
+            double[] OptimizedSP = new double[1];
+            double[] arrayB = new double[Crms.Length];
+            Array.Copy(Crms, 0, arrayB, 0, Crms.Length);
+            //for (int i = 1; i <= 4; i++)
+            //{
+            int varB = Array.IndexOf(arrayB, arrayB.Min());
+            //OptimizedSP[i - 1] = vecSP[varB + 2];
+            OptimizedSP[0] = vecSP[varB + 2];
+            arrayB[varB] = 1000000000;
+            //}
+            label3.Text = Convert.ToString(OptimizedSP[0]);
+           
+            label4.Text = Convert.ToString(OptimizedSP[0] * Convert.ToInt32(textBox6.Text));
+            //return OptimizedSP;
+            //double[] A = CUTeffiForm.A;
+            //A = OptimizedSP;
+            //SplashScreen.cut.panelupdate(A);
         }
        
         
-        private void Minotor()
+        private void Monitor()
         {
             SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\ "+ DateTime.Now.ToString("yyyy - MM - dd HH - mm - ss") + "_" +"RMSData.txt");
             SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\" + DateTime.Now.ToString("yyyy - MM - dd HH - mm - ss") + "_" + "RawData.txt");

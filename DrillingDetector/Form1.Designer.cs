@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.AGaugeRange aGaugeRange1 = new System.Windows.Forms.AGaugeRange();
-            System.Windows.Forms.AGaugeRange aGaugeRange2 = new System.Windows.Forms.AGaugeRange();
-            System.Windows.Forms.AGaugeRange aGaugeRange3 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange7 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange8 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange9 = new System.Windows.Forms.AGaugeRange();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CUTeffi_DrillingModule));
             this.aGauge1 = new System.Windows.Forms.AGauge();
             this.label1 = new System.Windows.Forms.Label();
@@ -74,6 +74,9 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -95,30 +98,30 @@
             this.aGauge1.BaseArcWidth = 4;
             this.aGauge1.Center = new System.Drawing.Point(200, 210);
             this.aGauge1.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            aGaugeRange1.Color = System.Drawing.Color.Lime;
-            aGaugeRange1.EndValue = 4F;
-            aGaugeRange1.InnerRadius = 130;
-            aGaugeRange1.InRange = true;
-            aGaugeRange1.Name = "green";
-            aGaugeRange1.OuterRadius = 140;
-            aGaugeRange1.StartValue = 0F;
-            aGaugeRange2.Color = System.Drawing.Color.Yellow;
-            aGaugeRange2.EndValue = 7F;
-            aGaugeRange2.InnerRadius = 130;
-            aGaugeRange2.InRange = false;
-            aGaugeRange2.Name = "yellow";
-            aGaugeRange2.OuterRadius = 140;
-            aGaugeRange2.StartValue = 4F;
-            aGaugeRange3.Color = System.Drawing.Color.Red;
-            aGaugeRange3.EndValue = 10F;
-            aGaugeRange3.InnerRadius = 130;
-            aGaugeRange3.InRange = false;
-            aGaugeRange3.Name = "red";
-            aGaugeRange3.OuterRadius = 140;
-            aGaugeRange3.StartValue = 7F;
-            this.aGauge1.GaugeRanges.Add(aGaugeRange1);
-            this.aGauge1.GaugeRanges.Add(aGaugeRange2);
-            this.aGauge1.GaugeRanges.Add(aGaugeRange3);
+            aGaugeRange7.Color = System.Drawing.Color.Lime;
+            aGaugeRange7.EndValue = 4F;
+            aGaugeRange7.InnerRadius = 130;
+            aGaugeRange7.InRange = true;
+            aGaugeRange7.Name = "green";
+            aGaugeRange7.OuterRadius = 140;
+            aGaugeRange7.StartValue = 0F;
+            aGaugeRange8.Color = System.Drawing.Color.Yellow;
+            aGaugeRange8.EndValue = 7F;
+            aGaugeRange8.InnerRadius = 130;
+            aGaugeRange8.InRange = false;
+            aGaugeRange8.Name = "yellow";
+            aGaugeRange8.OuterRadius = 140;
+            aGaugeRange8.StartValue = 4F;
+            aGaugeRange9.Color = System.Drawing.Color.Red;
+            aGaugeRange9.EndValue = 10F;
+            aGaugeRange9.InnerRadius = 130;
+            aGaugeRange9.InRange = false;
+            aGaugeRange9.Name = "red";
+            aGaugeRange9.OuterRadius = 140;
+            aGaugeRange9.StartValue = 7F;
+            this.aGauge1.GaugeRanges.Add(aGaugeRange7);
+            this.aGauge1.GaugeRanges.Add(aGaugeRange8);
+            this.aGauge1.GaugeRanges.Add(aGaugeRange9);
             this.aGauge1.Location = new System.Drawing.Point(0, 100);
             this.aGauge1.MaxValue = 10F;
             this.aGauge1.MinValue = 0F;
@@ -224,6 +227,7 @@
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 14;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // label17
             // 
@@ -373,6 +377,9 @@
             // 
             // panelSetting
             // 
+            this.panelSetting.Controls.Add(this.checkBox1);
+            this.panelSetting.Controls.Add(this.textBox6);
+            this.panelSetting.Controls.Add(this.label16);
             this.panelSetting.Controls.Add(this.panel2);
             this.panelSetting.Controls.Add(this.label20);
             this.panelSetting.Controls.Add(this.label19);
@@ -455,7 +462,7 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox1.Location = new System.Drawing.Point(220, 142);
+            this.textBox1.Location = new System.Drawing.Point(252, 142);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 33);
             this.textBox1.TabIndex = 8;
@@ -573,6 +580,35 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "孔位資訊";
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label16.Location = new System.Drawing.Point(116, 212);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(105, 24);
+            this.label16.TabIndex = 20;
+            this.label16.Text = "每轉進給量";
+            // 
+            // textBox6
+            // 
+            this.textBox6.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.textBox6.Location = new System.Drawing.Point(252, 209);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(100, 33);
+            this.textBox6.TabIndex = 21;
+            this.textBox6.Text = "0.15";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(141, 254);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(77, 16);
+            this.checkBox1.TabIndex = 22;
+            this.checkBox1.Text = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // CUTeffi_DrillingModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -653,6 +689,9 @@
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
