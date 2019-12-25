@@ -35,6 +35,7 @@ namespace DrillingDetector
         public StreamWriter SW_RawData;
         public double[] vecTime,xdata,ydata,zdata;
         public double rms_xdata, rms_ydata, rms_zdata;
+        int startstate = 0;
 
 
         public CUTeffi_DrillingModule()
@@ -50,6 +51,74 @@ namespace DrillingDetector
             pictureBox3.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_ButtonTestStart.png");
             pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_graylight.png");
 
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            switch (indexSettingPanel)
+            {
+                case 0:
+                    for (int i = 0; i <= 300; i = i + 10)
+                    {
+                        panelSetting.Location = new Point(695 - i, 0);
+                        this.Refresh();
+                    }
+                    indexSettingPanel = 1;
+                    break;
+                case 1:
+                    for (int i = 300; i >= 0; i = i - 10)
+                    {
+                        panelSetting.Location = new Point(695 - i, 0);
+                        this.Refresh();
+                    }
+                    indexSettingPanel = 0;
+                    break;
+            }
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            pictureBox_state.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_red.png");
+            label3.Text = "1400";
+            label4.Text = "170";
+            label9.Text = "0";
+            label15.Text = "329.952";
+            pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_yellowlight.png");
+            aGauge1.Value = 8.4F;
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            if (startstate == 0)
+            {
+                optimization_checkbox.Enabled = false;
+                button1.Enabled = false;
+                startstate = 1;
+                if (optimization_checkbox.Checked == true)
+                {
+                    CUTeffi_opt();
+                }
+                else
+                {
+                    Monitor();
+                }
+            }
+            else if (startstate ==1)
+            {
+                Stopsampling();
+            }
+           
+            
+            
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            textBox5.Text = "" + Convert.ToDouble(textBox4.Text) * Convert.ToDouble(textBox6.Text);
+            
+        }
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            textBox3.Text = "" + Convert.ToDouble(textBox2.Text) * Convert.ToDouble(textBox6.Text);
         }
 
         [STAThread]
@@ -125,13 +194,14 @@ namespace DrillingDetector
                 }
                 //double varFs = 1 / ((vecTime[data[0].SampleCount - 1] - vecTime[0]) / (data[0].SampleCount - 1));
                 //double varFs2 = 1 / (vecTime[1] - vecTime[0]);
+                rms_xdata = rootMeanSquare(xdata);
+                rms_ydata = rootMeanSquare(ydata);
+                rms_zdata = rootMeanSquare(zdata);
 
                 analogInReader.BeginMemoryOptimizedReadWaveform(Convert.ToInt32(1280),
                     analogCallback, myTask, data);
 
-                rms_xdata = rootMeanSquare(xdata);
-                rms_ydata = rootMeanSquare(ydata);
-                rms_zdata = rootMeanSquare(zdata);
+                
                 //aGauge1.Value = Convert.ToSingle(rms_zdata);
 
                 
@@ -176,46 +246,7 @@ namespace DrillingDetector
             pictureBox_state.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_green.png");
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            switch (indexSettingPanel)
-            {
-                case 0:
-                    for(int i = 0; i <= 300; i = i + 10)
-                    {
-                        panelSetting.Location = new Point(695 - i, 0);
-                        this.Refresh();
-                    }
-                    indexSettingPanel = 1;
-                    break;
-                case 1:
-                    for (int i = 300; i >= 0; i = i - 10)
-                    {
-                        panelSetting.Location = new Point(695 - i, 0);
-                        this.Refresh();
-                    }
-                    indexSettingPanel = 0;
-                    break;
-            }
-        }
-
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            pictureBox_state.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_red.png");
-            label3.Text = "1400";
-            label4.Text = "170";
-            label9.Text = "0";
-            label15.Text = "329.952";
-            pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_yellowlight.png");
-            aGauge1.Value = 8.4F;
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-
-            CUTeffi_opt();
-            Monitor();
-        }
+      
 
         private void CUTeffi_opt()
         {
@@ -223,16 +254,18 @@ namespace DrillingDetector
             textBox2.Text = ""+Convert.ToDouble(textBox4.Text) * 0.5;
             //移動至指定XY座標
             //小助手優化程序
-            StartSampling();
+            
             int iii = 0;
             int indexP = 0;
             SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RMSData.txt");
             SW_State = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State.txt");
             SW_State2 = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State2.txt");
             SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RawData.txt");
+            StartSampling();
+            aGauge1.Value = Convert.ToSingle(rms_zdata);
+
 
             double[] vecSP = new double[14];
-            //double[] vecSP2 = new double[] { 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
             double[] vecSP2 = new double[] { 0, 0, 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
             //for (int i = 0; i < 12; i++)
             for (int i = 0; i < 14; i++)
@@ -244,7 +277,6 @@ namespace DrillingDetector
 
             if (rms_zdata > 0.25 ) // 閥值定義：轉與不轉振動量大小 && entropy[0] < threshold_entropy
             {
-
                 if (iii == 3)//穩定大於閥值0.3秒後，紀錄當下時間
                 {
                     SW_State.WriteLine(vecTime[0]);
@@ -252,8 +284,6 @@ namespace DrillingDetector
                     Console.WriteLine("start");
                 }
                 iii++;
-
-                //Console.Write(indexP + "  " + vecTime[0] + "  " + rms_vibration + " ");
             }
             else
             {
@@ -286,7 +316,6 @@ namespace DrillingDetector
             SW_RMSData.Write(vecSP[indexP]);
             SW_RMSData.Write(",");
             SW_RMSData.WriteLine(rms_zdata);
-       
             for (int i = 0; i < xdata.Length; i++)
             {
                 SW_RawData.Write(vecTime[i]);
@@ -298,9 +327,9 @@ namespace DrillingDetector
                 SW_RawData.WriteLine(zdata[i]);
             }
             //存檔區結束
-
             //輸出轉速、進給
         }
+
         private void Optmization()
         {
             double SPmax = Convert.ToDouble(textBox4.Text);
@@ -317,9 +346,7 @@ namespace DrillingDetector
                 counter1++;
             }
             double[] vecState = new double[counter1];
-
-
-
+            
             for (int i = 0; i < vecState.Length; i++)//counter1
             {
                 vecState[i] = DataRead1[i];
@@ -339,14 +366,14 @@ namespace DrillingDetector
                 //Console.WriteLine(DataRead[counter]);
                 counter++;
             }
-            double[] vecTime = new double[counter];
+            double[] vecTime1 = new double[counter];
             double[] SpindleSpeed = new double[counter];
             double[] RMSData = new double[counter];
 
 
             for (int i = 0; i < counter; i++)
             {
-                vecTime[i] = DataRead[i][0];
+                vecTime1[i] = DataRead[i][0];
                 SpindleSpeed[i] = DataRead[i][1];
                 RMSData[i] = DataRead[i][2];
             }
@@ -357,18 +384,16 @@ namespace DrillingDetector
             //------------------------------------- Spindle speed optimization ---------------------------------------//
             //int indexMaterial = CUTeffiForm.indexMaterial;
             //double[] vecSP = new double[12];
-            double[] vecSP = new double[14];
+            double[] vecSP = new double[9];
             //if (indexMaterial == 1)
             //{
-                //double[] vecSP2 = new double[] { 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
-                double[] vecSP2 = new double[] { 0, 0, 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
-                //for (int i = 0; i < 12; i++)
-                for (int i = 0; i < 14; i++)
-                {
-                    vecSP[i] = SPmax - vecSP2[i];//---------------------------------------------------------------------------------------------
-                    vecSP[0] = 3183;
-                    vecSP[1] = 3183;
-                }
+            //double[] vecSP2 = new double[] { 0, 2000, 750, 2500, 250, 1750, 1000, 2750, 1250, 2250, 1500, 500 };
+            double[] vecSP2 = new double[] { 0, 1600, 200, 800, 400, 1200, 1400, 600, 1000 };
+            //for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 9; i++)
+            {
+                vecSP[i] = SPmax - vecSP2[i];//---------------------------------------------------------------------------------------------
+            }
             //}
             //else if (indexMaterial == 2)
             //{
@@ -383,19 +408,19 @@ namespace DrillingDetector
             //    }
             //}
             //double[] vecSP = new double[12];//-------------------------------------------------------------------------------------------------
-            int[] vecLoc = new int[vecState.Length - 5];
+            int[] vecLoc = new int[vecState.Length];
             //for (int i = 12; i >= 1; i--)
             //{
             //    vecSP[i - 1] = maxSP - 250 * (13 - i - 1);
             //}
 
-            for (int i = 4; i < vecState.Length - 1; i++)
+            for (int i = 0; i < vecState.Length - 1; i++)
             {
-                vecLoc[i - 4] = Array.IndexOf(vecTime, vecState[i]); ;
+                vecLoc[i] = Array.IndexOf(vecTime1, vecState[i]); 
             }
 
-            double[] Crms = new double[vecSP.Length - 2];
-            for (int i = 0; i < vecSP.Length - 2; i++)//vecSP.Length
+            double[] Crms = new double[vecSP.Length];
+            for (int i = 0; i < vecSP.Length; i++)//vecSP.Length
             {
                 int varRange = vecLoc[2 * i + 1] - vecLoc[2 * i]; //stop index - start index
                 int varLoc1 = Convert.ToInt32(Math.Floor(varRange * 0.8));
@@ -415,11 +440,10 @@ namespace DrillingDetector
             //{
             int varB = Array.IndexOf(arrayB, arrayB.Min());
             //OptimizedSP[i - 1] = vecSP[varB + 2];
-            OptimizedSP[0] = vecSP[varB + 2];
+            OptimizedSP[0] = vecSP[varB];
             arrayB[varB] = 1000000000;
             //}
             label3.Text = Convert.ToString(OptimizedSP[0]);
-           
             label4.Text = Convert.ToString(OptimizedSP[0] * Convert.ToInt32(textBox6.Text));
             //return OptimizedSP;
             //double[] A = CUTeffiForm.A;
@@ -430,7 +454,7 @@ namespace DrillingDetector
         
         private void Monitor()
         {
-            SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\ "+ DateTime.Now.ToString("yyyy - MM - dd HH - mm - ss") + "_" +"RMSData.txt");
+            SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\"+ DateTime.Now.ToString("yyyy - MM - dd HH - mm - ss") + "_" +"RMSData.txt");
             SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\" + DateTime.Now.ToString("yyyy - MM - dd HH - mm - ss") + "_" + "RawData.txt");
             StartSampling();
             aGauge1.Value = Convert.ToSingle(rms_zdata);
@@ -451,6 +475,19 @@ namespace DrillingDetector
                 {
                     processGreen();
                 }
+            }
+            SW_RMSData.Write(vecTime[0]);
+            SW_RMSData.Write(",");
+            SW_RMSData.WriteLine(rms_zdata);
+            for (int i = 0; i < xdata.Length; i++)
+            {
+                SW_RawData.Write(vecTime[i]);
+                SW_RawData.Write(",");
+                SW_RawData.Write(xdata[i]);
+                SW_RawData.Write(",");
+                SW_RawData.Write(ydata[i]);
+                SW_RawData.Write(",");
+                SW_RawData.WriteLine(zdata[i]);
             }
         }
         private static void Move_Spindle()

@@ -76,6 +76,7 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.optimization_checkbox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -376,6 +377,7 @@
             // 
             // panelSetting
             // 
+            this.panelSetting.Controls.Add(this.optimization_checkbox);
             this.panelSetting.Controls.Add(this.textBox6);
             this.panelSetting.Controls.Add(this.label16);
             this.panelSetting.Controls.Add(this.panel2);
@@ -408,13 +410,13 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 33);
             this.textBox6.TabIndex = 21;
-            this.textBox6.Text = "0.15";
+            this.textBox6.Text = "0.1";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label16.Location = new System.Drawing.Point(116, 212);
+            this.label16.Location = new System.Drawing.Point(126, 212);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(105, 24);
             this.label16.TabIndex = 20;
@@ -447,7 +449,7 @@
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 33);
             this.textBox5.TabIndex = 12;
-            this.textBox5.Text = "200";
+            this.textBox5.Text = "250";
             // 
             // textBox4
             // 
@@ -456,7 +458,8 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 33);
             this.textBox4.TabIndex = 11;
-            this.textBox4.Text = "2000";
+            this.textBox4.Text = "2500";
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
             // textBox3
             // 
@@ -465,7 +468,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 33);
             this.textBox3.TabIndex = 10;
-            this.textBox3.Text = "100";
+            this.textBox3.Text = "90";
             // 
             // textBox2
             // 
@@ -474,7 +477,8 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 33);
             this.textBox2.TabIndex = 9;
-            this.textBox2.Text = "1000";
+            this.textBox2.Text = "900";
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // textBox1
             // 
@@ -509,11 +513,11 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label11.Location = new System.Drawing.Point(139, 145);
+            this.label11.Location = new System.Drawing.Point(126, 145);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(48, 24);
+            this.label11.Size = new System.Drawing.Size(86, 24);
             this.label11.TabIndex = 5;
-            this.label11.Text = "閥值";
+            this.label11.Text = "停機閥值";
             // 
             // label10
             // 
@@ -597,6 +601,17 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "孔位資訊";
             // 
+            // optimization_checkbox
+            // 
+            this.optimization_checkbox.AutoSize = true;
+            this.optimization_checkbox.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.optimization_checkbox.Location = new System.Drawing.Point(130, 258);
+            this.optimization_checkbox.Name = "optimization_checkbox";
+            this.optimization_checkbox.Size = new System.Drawing.Size(148, 28);
+            this.optimization_checkbox.TabIndex = 22;
+            this.optimization_checkbox.Text = "Optimization";
+            this.optimization_checkbox.UseVisualStyleBackColor = true;
+            // 
             // CUTeffi_DrillingModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -679,6 +694,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox optimization_checkbox;
     }
 }
 
