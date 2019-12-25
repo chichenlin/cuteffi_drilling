@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.AGaugeRange aGaugeRange7 = new System.Windows.Forms.AGaugeRange();
-            System.Windows.Forms.AGaugeRange aGaugeRange8 = new System.Windows.Forms.AGaugeRange();
-            System.Windows.Forms.AGaugeRange aGaugeRange9 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange4 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange5 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange6 = new System.Windows.Forms.AGaugeRange();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CUTeffi_DrillingModule));
             this.aGauge1 = new System.Windows.Forms.AGauge();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,6 +56,8 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.panelSetting = new System.Windows.Forms.Panel();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
@@ -74,9 +76,6 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -98,30 +97,30 @@
             this.aGauge1.BaseArcWidth = 4;
             this.aGauge1.Center = new System.Drawing.Point(200, 210);
             this.aGauge1.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            aGaugeRange7.Color = System.Drawing.Color.Lime;
-            aGaugeRange7.EndValue = 4F;
-            aGaugeRange7.InnerRadius = 130;
-            aGaugeRange7.InRange = true;
-            aGaugeRange7.Name = "green";
-            aGaugeRange7.OuterRadius = 140;
-            aGaugeRange7.StartValue = 0F;
-            aGaugeRange8.Color = System.Drawing.Color.Yellow;
-            aGaugeRange8.EndValue = 7F;
-            aGaugeRange8.InnerRadius = 130;
-            aGaugeRange8.InRange = false;
-            aGaugeRange8.Name = "yellow";
-            aGaugeRange8.OuterRadius = 140;
-            aGaugeRange8.StartValue = 4F;
-            aGaugeRange9.Color = System.Drawing.Color.Red;
-            aGaugeRange9.EndValue = 10F;
-            aGaugeRange9.InnerRadius = 130;
-            aGaugeRange9.InRange = false;
-            aGaugeRange9.Name = "red";
-            aGaugeRange9.OuterRadius = 140;
-            aGaugeRange9.StartValue = 7F;
-            this.aGauge1.GaugeRanges.Add(aGaugeRange7);
-            this.aGauge1.GaugeRanges.Add(aGaugeRange8);
-            this.aGauge1.GaugeRanges.Add(aGaugeRange9);
+            aGaugeRange4.Color = System.Drawing.Color.Lime;
+            aGaugeRange4.EndValue = 4F;
+            aGaugeRange4.InnerRadius = 130;
+            aGaugeRange4.InRange = true;
+            aGaugeRange4.Name = "green";
+            aGaugeRange4.OuterRadius = 140;
+            aGaugeRange4.StartValue = 0F;
+            aGaugeRange5.Color = System.Drawing.Color.Yellow;
+            aGaugeRange5.EndValue = 7F;
+            aGaugeRange5.InnerRadius = 130;
+            aGaugeRange5.InRange = false;
+            aGaugeRange5.Name = "yellow";
+            aGaugeRange5.OuterRadius = 140;
+            aGaugeRange5.StartValue = 4F;
+            aGaugeRange6.Color = System.Drawing.Color.Red;
+            aGaugeRange6.EndValue = 10F;
+            aGaugeRange6.InnerRadius = 130;
+            aGaugeRange6.InRange = false;
+            aGaugeRange6.Name = "red";
+            aGaugeRange6.OuterRadius = 140;
+            aGaugeRange6.StartValue = 7F;
+            this.aGauge1.GaugeRanges.Add(aGaugeRange4);
+            this.aGauge1.GaugeRanges.Add(aGaugeRange5);
+            this.aGauge1.GaugeRanges.Add(aGaugeRange6);
             this.aGauge1.Location = new System.Drawing.Point(0, 100);
             this.aGauge1.MaxValue = 10F;
             this.aGauge1.MinValue = 0F;
@@ -377,7 +376,6 @@
             // 
             // panelSetting
             // 
-            this.panelSetting.Controls.Add(this.checkBox1);
             this.panelSetting.Controls.Add(this.textBox6);
             this.panelSetting.Controls.Add(this.label16);
             this.panelSetting.Controls.Add(this.panel2);
@@ -402,6 +400,25 @@
             this.panelSetting.Name = "panelSetting";
             this.panelSetting.Size = new System.Drawing.Size(405, 500);
             this.panelSetting.TabIndex = 13;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.textBox6.Location = new System.Drawing.Point(252, 209);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(100, 33);
+            this.textBox6.TabIndex = 21;
+            this.textBox6.Text = "0.15";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label16.Location = new System.Drawing.Point(116, 212);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(105, 24);
+            this.label16.TabIndex = 20;
+            this.label16.Text = "每轉進給量";
             // 
             // label20
             // 
@@ -580,35 +597,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "孔位資訊";
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label16.Location = new System.Drawing.Point(116, 212);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(105, 24);
-            this.label16.TabIndex = 20;
-            this.label16.Text = "每轉進給量";
-            // 
-            // textBox6
-            // 
-            this.textBox6.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox6.Location = new System.Drawing.Point(252, 209);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 33);
-            this.textBox6.TabIndex = 21;
-            this.textBox6.Text = "0.15";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(141, 254);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(77, 16);
-            this.checkBox1.TabIndex = 22;
-            this.checkBox1.Text = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // CUTeffi_DrillingModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -691,7 +679,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

@@ -212,16 +212,9 @@ namespace DrillingDetector
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
-            if (checkBox1.Checked==true)
-            {
-                CUTeffi_opt();
-            }
-            else
-            {
-                Monitor();
-            }
-            
-            
+
+            CUTeffi_opt();
+            Monitor();
         }
 
         private void CUTeffi_opt()
