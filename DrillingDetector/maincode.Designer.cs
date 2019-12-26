@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.AGaugeRange aGaugeRange4 = new System.Windows.Forms.AGaugeRange();
-            System.Windows.Forms.AGaugeRange aGaugeRange5 = new System.Windows.Forms.AGaugeRange();
-            System.Windows.Forms.AGaugeRange aGaugeRange6 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange1 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange2 = new System.Windows.Forms.AGaugeRange();
+            System.Windows.Forms.AGaugeRange aGaugeRange3 = new System.Windows.Forms.AGaugeRange();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CUTeffi_DrillingModule));
             this.aGauge1 = new System.Windows.Forms.AGauge();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,6 +56,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.panelSetting = new System.Windows.Forms.Panel();
+            this.optimization_checkbox = new System.Windows.Forms.CheckBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -76,7 +77,6 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.optimization_checkbox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -98,30 +98,30 @@
             this.aGauge1.BaseArcWidth = 4;
             this.aGauge1.Center = new System.Drawing.Point(200, 210);
             this.aGauge1.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            aGaugeRange4.Color = System.Drawing.Color.Lime;
-            aGaugeRange4.EndValue = 4F;
-            aGaugeRange4.InnerRadius = 130;
-            aGaugeRange4.InRange = true;
-            aGaugeRange4.Name = "green";
-            aGaugeRange4.OuterRadius = 140;
-            aGaugeRange4.StartValue = 0F;
-            aGaugeRange5.Color = System.Drawing.Color.Yellow;
-            aGaugeRange5.EndValue = 7F;
-            aGaugeRange5.InnerRadius = 130;
-            aGaugeRange5.InRange = false;
-            aGaugeRange5.Name = "yellow";
-            aGaugeRange5.OuterRadius = 140;
-            aGaugeRange5.StartValue = 4F;
-            aGaugeRange6.Color = System.Drawing.Color.Red;
-            aGaugeRange6.EndValue = 10F;
-            aGaugeRange6.InnerRadius = 130;
-            aGaugeRange6.InRange = false;
-            aGaugeRange6.Name = "red";
-            aGaugeRange6.OuterRadius = 140;
-            aGaugeRange6.StartValue = 7F;
-            this.aGauge1.GaugeRanges.Add(aGaugeRange4);
-            this.aGauge1.GaugeRanges.Add(aGaugeRange5);
-            this.aGauge1.GaugeRanges.Add(aGaugeRange6);
+            aGaugeRange1.Color = System.Drawing.Color.Lime;
+            aGaugeRange1.EndValue = 4F;
+            aGaugeRange1.InnerRadius = 130;
+            aGaugeRange1.InRange = true;
+            aGaugeRange1.Name = "green";
+            aGaugeRange1.OuterRadius = 140;
+            aGaugeRange1.StartValue = 0F;
+            aGaugeRange2.Color = System.Drawing.Color.Yellow;
+            aGaugeRange2.EndValue = 7F;
+            aGaugeRange2.InnerRadius = 130;
+            aGaugeRange2.InRange = false;
+            aGaugeRange2.Name = "yellow";
+            aGaugeRange2.OuterRadius = 140;
+            aGaugeRange2.StartValue = 4F;
+            aGaugeRange3.Color = System.Drawing.Color.Red;
+            aGaugeRange3.EndValue = 10F;
+            aGaugeRange3.InnerRadius = 130;
+            aGaugeRange3.InRange = false;
+            aGaugeRange3.Name = "red";
+            aGaugeRange3.OuterRadius = 140;
+            aGaugeRange3.StartValue = 7F;
+            this.aGauge1.GaugeRanges.Add(aGaugeRange1);
+            this.aGauge1.GaugeRanges.Add(aGaugeRange2);
+            this.aGauge1.GaugeRanges.Add(aGaugeRange3);
             this.aGauge1.Location = new System.Drawing.Point(0, 100);
             this.aGauge1.MaxValue = 10F;
             this.aGauge1.MinValue = 0F;
@@ -403,6 +403,17 @@
             this.panelSetting.Size = new System.Drawing.Size(405, 500);
             this.panelSetting.TabIndex = 13;
             // 
+            // optimization_checkbox
+            // 
+            this.optimization_checkbox.AutoSize = true;
+            this.optimization_checkbox.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.optimization_checkbox.Location = new System.Drawing.Point(130, 258);
+            this.optimization_checkbox.Name = "optimization_checkbox";
+            this.optimization_checkbox.Size = new System.Drawing.Size(148, 28);
+            this.optimization_checkbox.TabIndex = 22;
+            this.optimization_checkbox.Text = "Optimization";
+            this.optimization_checkbox.UseVisualStyleBackColor = true;
+            // 
             // textBox6
             // 
             this.textBox6.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -601,17 +612,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "孔位資訊";
             // 
-            // optimization_checkbox
-            // 
-            this.optimization_checkbox.AutoSize = true;
-            this.optimization_checkbox.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.optimization_checkbox.Location = new System.Drawing.Point(130, 258);
-            this.optimization_checkbox.Name = "optimization_checkbox";
-            this.optimization_checkbox.Size = new System.Drawing.Size(148, 28);
-            this.optimization_checkbox.TabIndex = 22;
-            this.optimization_checkbox.Text = "Optimization";
-            this.optimization_checkbox.UseVisualStyleBackColor = true;
-            // 
             // CUTeffi_DrillingModule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -649,8 +649,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.AGauge aGauge1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
@@ -695,6 +693,7 @@
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox optimization_checkbox;
+        public System.Windows.Forms.AGauge aGauge1;
     }
 }
 
