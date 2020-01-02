@@ -16,7 +16,7 @@ namespace DrillingDetector
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CUTeffi_DrillingModule());
+            Application.Run(new SplashScreen());
         }
     }
 }

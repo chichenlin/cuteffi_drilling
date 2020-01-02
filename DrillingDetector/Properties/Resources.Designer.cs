@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CUTeffiDrillingModule.Properties {
+namespace DrillingDetector.Properties {
     using System;
     
     

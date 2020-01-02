@@ -11,9 +11,9 @@ using NationalInstruments.DAQmx;
 using NationalInstruments;
 using System.Diagnostics;
 using System.IO;
-using CUTeffiDrillingModule;
+using DrillingDetector;
 
-namespace CUTeffiDrillingModule
+namespace DrillingDetector
 {
     class CUTeffi_opt
     {

@@ -11,22 +11,22 @@ using NationalInstruments.DAQmx;
 using NationalInstruments;
 using System.Diagnostics;
 using System.IO;
-using CUTeffiDrillingModule;
 
 
 namespace DrillingDetector
 {
     public partial class CUTeffi_DrillingModule : Form
     {
+        public SplashScreen FSS = null;
         private int indexSettingPanel = 0;
         public int startstate = 0;
-        //CUTeffi_opt CUTeffi_Opt = new CUTeffi_opt();
-        Vibration_Monitor Vibration_monitor = new Vibration_Monitor(); 
+        
         public static AGauge aGauge;
         public static PictureBox pictureBox;
         public static TextBox threshold,RPMmax,CutPerRPM;
         public static Label Feedrate, Spindle_rpm;
-
+        public static CheckBox opt_checkbox;
+        Vibration_Monitor Vibration_monitor = new Vibration_Monitor();
 
 
         public CUTeffi_DrillingModule()
@@ -39,6 +39,7 @@ namespace DrillingDetector
             CutPerRPM = this.textBox6;
             Feedrate = this.label4;
             Spindle_rpm = this.label3;
+            opt_checkbox = this.optimization_checkbox;
             this.Size = new Size(816, 539);
             label3.Text = " ";
             label4.Text = " ";
@@ -92,7 +93,7 @@ namespace DrillingDetector
                 if (optimization_checkbox.Checked == true)
                 {
                     Refresh();
-                    //CUTeffi_Opt.StartSampling();
+                    
                 }
                 else
                 {
