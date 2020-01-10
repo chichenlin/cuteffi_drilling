@@ -12,6 +12,9 @@ using NationalInstruments;
 using System.Diagnostics;
 using System.IO;
 using DrillingDetector;
+using Itri.Vmx.Host;
+using Itri.Vmx.Cnc;
+using System.ComponentModel.Composition;
 
 
 
@@ -39,6 +42,8 @@ namespace DrillingDetector
         public double[] vecTime, xdata, ydata, zdata, vecSP;
         public double rms_xdata, rms_ydata, rms_zdata;
         public int startstate = 0, indexP;
+
+       
         [STAThread]
         public void StartSampling()
         {
@@ -75,7 +80,7 @@ namespace DrillingDetector
             {
                 if (chan[i] == 1)
                 {
-                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ1Mod1/ai" + Convert.ToString(i), "",
+                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ2Mod1/ai" + Convert.ToString(i), "",
                         terminalConfiguration, Vmin, Vmax, sen, sensitivityUnits, excitationSource,
                         EVN, AIAccelerationUnits.G);
                     aiChannel.Coupling = inputCoupling;
@@ -132,7 +137,7 @@ namespace DrillingDetector
                 {
                     Monitor();
                 }
-                
+
 
                 analogInReader.BeginMemoryOptimizedReadWaveform(Convert.ToInt32(1280),
                     analogCallback, myTask, data);
@@ -141,6 +146,7 @@ namespace DrillingDetector
                 CUTeffi_DrillingModule.aGauge.Value = Convert.ToSingle(rms_zdata);
 
 
+               
 
                 //sw.Stop();
                 //TimeSpan ts2 = sw.Elapsed;
@@ -177,11 +183,17 @@ namespace DrillingDetector
             return Math.Sqrt(sum / x.Length);
         }
 
-        private void Monitor()
+        public void Monitor()
         {
-            
-            StartSampling();
+            int XPOSstable = 0;
+            //StartSampling();
             CUTeffi_DrillingModule.aGauge.Value = Convert.ToSingle(rms_zdata);
+            //5.Show Value
+            CUTeffi_DrillingModule.Xpos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(0).ToString();
+            CUTeffi_DrillingModule.Ypos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(1).ToString();
+            //tbMachZ.Text = (mach_pos.Value as Array).GetValue(2).ToString();
+            CUTeffi_DrillingModule.Spindle_rpm.Text = CUTeffi_DrillingModule.sCode.Value.ToString();
+            CUTeffi_DrillingModule.Feedrate.Text = CUTeffi_DrillingModule.fCode.Value.ToString();
             //及時監控
             if (rms_xdata > 0.2)
             {
@@ -200,20 +212,22 @@ namespace DrillingDetector
                     processGreen();
                 }
             }
+
+
             SW_RMSData.Write(vecTime[0]);
             SW_RMSData.Write(",");
             SW_RMSData.WriteLine(rms_zdata);
             for (int i = 0; i < zdata.Length; i++)
             {
                 SW_RawData.Write(vecTime[i]);
-                //SW_RawData.Write(",");
-                // SW_RawData.Write(xpos[i]);
-                //SW_RawData.Write(",");
-                //SW_RawData.Write(ypos[i]);
-                //SW_RawData.Write(",");
-                //SW_RawData.Write(SpindleRPM[i]);
-                //SW_RawData.Write(",");
-                //SW_RawData.Write(Feedrate[i]);
+                SW_RawData.Write(",");
+                SW_RawData.Write(CUTeffi_DrillingModule.Xpos.Text);
+                SW_RawData.Write(",");
+                SW_RawData.Write(CUTeffi_DrillingModule.Ypos.Text);
+                SW_RawData.Write(",");
+                SW_RawData.Write(CUTeffi_DrillingModule.Spindle_rpm.Text);
+                SW_RawData.Write(",");
+                SW_RawData.Write(CUTeffi_DrillingModule.Feedrate.Text);
                 SW_RawData.Write(",");
                 SW_RawData.WriteLine(zdata[i]);
             }
@@ -225,11 +239,11 @@ namespace DrillingDetector
             //label4.Text = Convert.ToString(Convert.ToDouble(textBox3.Text) - 20);
             //label3.Text = Convert.ToString(Convert.ToDouble(label4.Text) * 10 - 200);
         }
-
         public void processGreen()
         {
             CUTeffi_DrillingModule.pictureBox.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_green.png");
         }
+
         private static void Move_Spindle()
         {
             //Z軸Feed = 0
@@ -238,7 +252,7 @@ namespace DrillingDetector
             //紀錄X、Y座標
             //移動X、Y軸至門口
         }
-        private void CUTeffi_OPT()
+        public void CUTeffi_OPT()
         {
             double SPmax = Convert.ToDouble(CUTeffi_DrillingModule.RPMmax.Text);
             //textBox2.Text = "" + Convert.ToDouble(textBox4.Text) * 0.5;
@@ -247,10 +261,10 @@ namespace DrillingDetector
 
             int iii = 0;
             int indexP = 0;
-            SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RMSData.txt");
-            SW_State = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State.txt");
-            SW_State2 = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State2.txt");
-            SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RawData.txt");
+            //SW_RMSData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RMSData.txt");
+            //SW_State = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State.txt");
+            //SW_State2 = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\State2.txt");
+            //SW_RawData = new StreamWriter(System.Environment.CurrentDirectory + "\\logData\\RawData.txt");
 
             double[] vecSP = new double[9];
             double[] vecSP2 = new double[] { 0, 1600, 200, 800, 400, 1200, 1400, 600, 1000 };
@@ -260,7 +274,7 @@ namespace DrillingDetector
                 vecSP[i] = SPmax - vecSP2[i];//---------------------------------------------------------------------------------------------
 
             }
-            StartSampling();
+            //StartSampling();
             CUTeffi_DrillingModule.aGauge.Value = Convert.ToSingle(rms_zdata);
             if (rms_zdata > 0.25) // 閥值定義：轉與不轉振動量大小 && entropy[0] < threshold_entropy
             {

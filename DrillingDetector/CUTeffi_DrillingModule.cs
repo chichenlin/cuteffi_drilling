@@ -11,23 +11,43 @@ using NationalInstruments.DAQmx;
 using NationalInstruments;
 using System.Diagnostics;
 using System.IO;
+using Itri.Vmx.Host;
+using Itri.Vmx.Cnc;
+using System.ComponentModel.Composition;
 
 
 namespace DrillingDetector
 {
-    public partial class CUTeffi_DrillingModule : Form
+    [Export(typeof(IVmxApp))]
+    public partial class CUTeffi_DrillingModule : Form,Itri.Vmx.Host.IVmxApp
     {
-        public SplashScreen FSS = null;
         private int indexSettingPanel = 0;
         public int startstate = 0;
-        
         public static AGauge aGauge;
         public static PictureBox pictureBox;
         public static TextBox threshold,RPMmax,CutPerRPM;
-        public static Label Feedrate, Spindle_rpm;
+        public static Label Feedrate, Spindle_rpm,Xpos,Ypos;
         public static CheckBox opt_checkbox;
         Vibration_Monitor Vibration_monitor = new Vibration_Monitor();
 
+        public string AppName => "DrillingDetector";
+        public Image Image => Image.FromFile(System.Environment.CurrentDirectory + "\\image\\icon.png");
+        //public bool Initialize(IVmxHost host)
+        //{
+        //    return true;
+        //}       
+        CncAdaptor cnc = null;
+        public bool Initialize(IVmxHost host)
+        {
+            if (host.CncAdapters.Length != 0)
+            {
+                cnc = host.CncAdapters[0];
+            }
+            return true;
+        }
+        public static DataItem mach_pos = new DataItem();
+        public static DataItem sCode = new DataItem();
+        public static DataItem fCode = new DataItem();
 
         public CUTeffi_DrillingModule()
         {
@@ -39,6 +59,8 @@ namespace DrillingDetector
             CutPerRPM = this.textBox6;
             Feedrate = this.label4;
             Spindle_rpm = this.label3;
+            Xpos = this.label9;
+            Ypos = this.label15;
             opt_checkbox = this.optimization_checkbox;
             this.Size = new Size(816, 539);
             label3.Text = " ";
@@ -47,6 +69,13 @@ namespace DrillingDetector
             label15.Text = " ";
             pictureBox3.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_ButtonTestStart.png");
             pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_graylight.png");
+
+            //  3. Set DataItem Path
+            mach_pos.Path = "/axes/MachineryPositions";
+            sCode.Path = "/controller/SpindleSpeedCmd";
+            fCode.Path = "/controller/feedrateCmd";
+            
+
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -71,16 +100,16 @@ namespace DrillingDetector
             }
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            pictureBox_state.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_red.png");
-            label3.Text = "1400";
-            label4.Text = "170";
-            label9.Text = "0";
-            label15.Text = "329.952";
-            pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_yellowlight.png");
-            aGauge1.Value = 8.4F;
-        }
+        //private void pictureBox2_Click(object sender, EventArgs e)
+        //{
+        //    pictureBox_state.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_red.png");
+        //    label3.Text = "1400";
+        //    label4.Text = "170";
+        //    label9.Text = "0";
+        //    label15.Text = "329.952";
+        //    pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_yellowlight.png");
+        //    aGauge1.Value = 8.4F;
+        //}
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
@@ -90,16 +119,23 @@ namespace DrillingDetector
                 optimization_checkbox.Enabled = false;
                 button1.Enabled = false;
                 startstate = 1;
-                if (optimization_checkbox.Checked == true)
-                {
-                    Refresh();
-                    
-                }
-                else
-                {
-                    Refresh();
-                    Vibration_monitor.StartSampling();
-                }
+                Vibration_monitor.StartSampling();
+                //if (optimization_checkbox.Checked == true)
+                //{
+                //    Vibration_monitor.CUTeffi_OPT();
+                //}
+                //else
+                //{
+                //    Vibration_monitor.Monitor();
+                //}
+
+                //4.Read Value
+                cnc.ReadDataItem(ref mach_pos);
+                cnc.ReadDataItem(ref sCode);
+                cnc.ReadDataItem(ref fCode);
+                
+
+
             }
             else if (startstate ==1)
             {
@@ -107,14 +143,7 @@ namespace DrillingDetector
                 optimization_checkbox.Enabled = true;
                 button1.Enabled = true;
                 startstate = 0;
-                if (optimization_checkbox.Checked == true)
-                {
-                    //CUTeffi_Opt.Stopsampling();
-                }
-                else
-                {
-                    Vibration_monitor.Stopsampling();
-                }
+                Vibration_monitor.Stopsampling();
                 aGauge1.Value = 0;
             }
            
@@ -130,7 +159,6 @@ namespace DrillingDetector
             textBox3.Text = "" + Convert.ToDouble(textBox2.Text) * Convert.ToDouble(textBox6.Text);
         }
 
-       
 
         private static void Avoid_touch()
         {
@@ -139,5 +167,9 @@ namespace DrillingDetector
             //辨識路徑是否干涉
             //if干涉 Alarm
         }
+
+       
+       
+
     }
 }
