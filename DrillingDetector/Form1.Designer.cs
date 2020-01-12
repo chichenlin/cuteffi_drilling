@@ -56,9 +56,6 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.panelSetting = new System.Windows.Forms.Panel();
-            this.button_drillNC = new System.Windows.Forms.Button();
-            this.button_OPTNC = new System.Windows.Forms.Button();
-            this.optimization_checkbox = new System.Windows.Forms.CheckBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -79,8 +76,7 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.optimization_checkbox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -381,12 +377,8 @@
             // 
             // panelSetting
             // 
-            this.panelSetting.Controls.Add(this.button_drillNC);
-            this.panelSetting.Controls.Add(this.button_OPTNC);
             this.panelSetting.Controls.Add(this.optimization_checkbox);
-            this.panelSetting.Controls.Add(this.textBox7);
             this.panelSetting.Controls.Add(this.textBox6);
-            this.panelSetting.Controls.Add(this.label18);
             this.panelSetting.Controls.Add(this.label16);
             this.panelSetting.Controls.Add(this.panel2);
             this.panelSetting.Controls.Add(this.label20);
@@ -411,43 +403,10 @@
             this.panelSetting.Size = new System.Drawing.Size(405, 500);
             this.panelSetting.TabIndex = 13;
             // 
-            // button_drillNC
-            // 
-            this.button_drillNC.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button_drillNC.Location = new System.Drawing.Point(274, 442);
-            this.button_drillNC.Name = "button_drillNC";
-            this.button_drillNC.Size = new System.Drawing.Size(100, 35);
-            this.button_drillNC.TabIndex = 24;
-            this.button_drillNC.Text = "drill_NC";
-            this.button_drillNC.UseVisualStyleBackColor = true;
-            this.button_drillNC.Click += new System.EventHandler(this.button_drillNC_Click);
-            // 
-            // button_OPTNC
-            // 
-            this.button_OPTNC.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button_OPTNC.Location = new System.Drawing.Point(141, 442);
-            this.button_OPTNC.Name = "button_OPTNC";
-            this.button_OPTNC.Size = new System.Drawing.Size(100, 35);
-            this.button_OPTNC.TabIndex = 23;
-            this.button_OPTNC.Text = "OPT_NC";
-            this.button_OPTNC.UseVisualStyleBackColor = true;
-            this.button_OPTNC.Click += new System.EventHandler(this.button_OPTNC_Click);
-            // 
-            // optimization_checkbox
-            // 
-            this.optimization_checkbox.AutoSize = true;
-            this.optimization_checkbox.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.optimization_checkbox.Location = new System.Drawing.Point(141, 408);
-            this.optimization_checkbox.Name = "optimization_checkbox";
-            this.optimization_checkbox.Size = new System.Drawing.Size(148, 28);
-            this.optimization_checkbox.TabIndex = 22;
-            this.optimization_checkbox.Text = "Optimization";
-            this.optimization_checkbox.UseVisualStyleBackColor = true;
-            // 
             // textBox6
             // 
             this.textBox6.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox6.Location = new System.Drawing.Point(274, 152);
+            this.textBox6.Location = new System.Drawing.Point(252, 209);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 33);
             this.textBox6.TabIndex = 21;
@@ -457,7 +416,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label16.Location = new System.Drawing.Point(126, 155);
+            this.label16.Location = new System.Drawing.Point(126, 212);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(105, 24);
             this.label16.TabIndex = 20;
@@ -467,7 +426,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label20.Location = new System.Drawing.Point(247, 366);
+            this.label20.Location = new System.Drawing.Point(246, 417);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(24, 24);
             this.label20.TabIndex = 19;
@@ -477,7 +436,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label19.Location = new System.Drawing.Point(247, 286);
+            this.label19.Location = new System.Drawing.Point(246, 339);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(24, 24);
             this.label19.TabIndex = 18;
@@ -486,7 +445,7 @@
             // textBox5
             // 
             this.textBox5.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox5.Location = new System.Drawing.Point(274, 363);
+            this.textBox5.Location = new System.Drawing.Point(274, 411);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 33);
             this.textBox5.TabIndex = 12;
@@ -495,7 +454,7 @@
             // textBox4
             // 
             this.textBox4.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox4.Location = new System.Drawing.Point(274, 283);
+            this.textBox4.Location = new System.Drawing.Point(274, 335);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 33);
             this.textBox4.TabIndex = 11;
@@ -505,7 +464,7 @@
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox3.Location = new System.Drawing.Point(141, 363);
+            this.textBox3.Location = new System.Drawing.Point(141, 411);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 33);
             this.textBox3.TabIndex = 10;
@@ -514,7 +473,7 @@
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox2.Location = new System.Drawing.Point(141, 283);
+            this.textBox2.Location = new System.Drawing.Point(141, 335);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 33);
             this.textBox2.TabIndex = 9;
@@ -524,7 +483,7 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox1.Location = new System.Drawing.Point(274, 115);
+            this.textBox1.Location = new System.Drawing.Point(252, 142);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 33);
             this.textBox1.TabIndex = 8;
@@ -534,7 +493,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label13.Location = new System.Drawing.Point(139, 326);
+            this.label13.Location = new System.Drawing.Point(139, 376);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(184, 24);
             this.label13.TabIndex = 7;
@@ -544,7 +503,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label12.Location = new System.Drawing.Point(139, 244);
+            this.label12.Location = new System.Drawing.Point(139, 300);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(149, 24);
             this.label12.TabIndex = 6;
@@ -554,7 +513,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label11.Location = new System.Drawing.Point(126, 118);
+            this.label11.Location = new System.Drawing.Point(126, 145);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(86, 24);
             this.label11.TabIndex = 5;
@@ -642,25 +601,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "孔位資訊";
             // 
-            // label18
+            // optimization_checkbox
             // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label18.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.label18.Location = new System.Drawing.Point(126, 194);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(136, 24);
-            this.label18.TabIndex = 20;
-            this.label18.Text = "切削深度(mm)";
-            // 
-            // textBox7
-            // 
-            this.textBox7.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox7.Location = new System.Drawing.Point(274, 191);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(100, 33);
-            this.textBox7.TabIndex = 21;
-            this.textBox7.Text = "25";
+            this.optimization_checkbox.AutoSize = true;
+            this.optimization_checkbox.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.optimization_checkbox.Location = new System.Drawing.Point(130, 258);
+            this.optimization_checkbox.Name = "optimization_checkbox";
+            this.optimization_checkbox.Size = new System.Drawing.Size(148, 28);
+            this.optimization_checkbox.TabIndex = 22;
+            this.optimization_checkbox.Text = "Optimization";
+            this.optimization_checkbox.UseVisualStyleBackColor = true;
             // 
             // CUTeffi_DrillingModule
             // 
@@ -699,6 +649,8 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.AGauge aGauge1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
@@ -743,11 +695,6 @@
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox optimization_checkbox;
-        public System.Windows.Forms.AGauge aGauge1;
-        private System.Windows.Forms.Button button_drillNC;
-        private System.Windows.Forms.Button button_OPTNC;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.Label label18;
     }
 }
 

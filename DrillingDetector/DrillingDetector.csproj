@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditNC.cs" />
     <Compile Include="Vibration_Monitor.cs" />
     <Compile Include="CUTeffi_opt.cs" />
     <Compile Include="CUTeffi_DrillingModule.cs">
