@@ -18,8 +18,8 @@ using System.Threading;
 
 namespace DrillingDetector
 {
-    //[Export(typeof(IVmxApp))]
-    public partial class CUTeffi_DrillingModule : Form//,Itri.Vmx.Host.IVmxApp
+    [Export(typeof(IVmxApp))]
+    public partial class CUTeffi_DrillingModule : Form,Itri.Vmx.Host.IVmxApp
     {
         private int indexSettingPanel = 0;
         public int startstate = 0;
@@ -30,21 +30,21 @@ namespace DrillingDetector
         public static CheckBox opt_checkbox;
         Vibration_Monitor Vibration_monitor = new Vibration_Monitor();
 
-        //public string AppName => "DrillingDetector";
-        //public Image Image => Image.FromFile(System.Environment.CurrentDirectory + "\\image\\icon.png");
-        ////public bool Initialize(IVmxHost host)
-        ////{
-        ////    return true;
-        ////}       
-        //CncAdaptor cnc = null;
+        public string AppName => "DrillingDetector";
+        public Image Image => Image.FromFile(System.Environment.CurrentDirectory + "\\image\\icon.png");
         //public bool Initialize(IVmxHost host)
         //{
-        //    if (host.CncAdapters.Length != 0)
-        //    {
-        //        cnc = host.CncAdapters[0];
-        //    }
         //    return true;
         //}
+        public static CncAdaptor cnc = null;
+        public bool Initialize(IVmxHost host)
+        {
+            if (host.CncAdaptors.Length != 0)
+            {
+                cnc = host.CncAdaptors[0];
+            }
+            return true;
+        }
         public static DataItem mach_pos = new DataItem();
         public static DataItem sCode = new DataItem();
         public static DataItem fCode = new DataItem();
@@ -179,7 +179,7 @@ namespace DrillingDetector
                 //cnc.ReadDataItem(ref mach_pos);
                 //cnc.ReadDataItem(ref sCode);
                 //cnc.ReadDataItem(ref fCode);
-                
+
 
 
             }
@@ -191,6 +191,7 @@ namespace DrillingDetector
                 startstate = 0;
                 Vibration_monitor.Stopsampling();
                 aGauge1.Value = 0;
+                
             }
            
         }
@@ -206,13 +207,13 @@ namespace DrillingDetector
         }
 
 
-        private static void Avoid_touch()
-        {
-            //輸入工件幾何
-            //讀取NC code(平台移動、主軸下降)
-            //辨識路徑是否干涉
-            //if干涉 Alarm
-        }
+        //private static void Avoid_touch()
+        //{
+        //    //輸入工件幾何
+        //    //讀取NC code(平台移動、主軸下降)
+        //    //辨識路徑是否干涉
+        //    //if干涉 Alarm
+        //}
 
        
        

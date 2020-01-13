@@ -53,7 +53,7 @@ namespace DrillingDetector
             excitationSource = AIExcitationSource.Internal;
             inputCoupling = AICoupling.AC;
             
-           
+
 
             myTask = new NationalInstruments.DAQmx.Task();
             AIChannel aiChannel;
@@ -129,6 +129,10 @@ namespace DrillingDetector
                 rms_xdata = rootMeanSquare(xdata);
                 rms_ydata = rootMeanSquare(ydata);
                 rms_zdata = rootMeanSquare(zdata);
+                //4.Read Value
+                CUTeffi_DrillingModule.cnc.ReadDataItem(ref CUTeffi_DrillingModule.mach_pos);
+                CUTeffi_DrillingModule.cnc.ReadDataItem(ref CUTeffi_DrillingModule.sCode);
+                CUTeffi_DrillingModule.cnc.ReadDataItem(ref CUTeffi_DrillingModule.fCode);
                 if (CUTeffi_DrillingModule.opt_checkbox.Checked == true)
                 {
                     CUTeffi_OPT();
@@ -189,12 +193,12 @@ namespace DrillingDetector
             CUTeffi_DrillingModule.aGauge.Value = Convert.ToSingle(rms_zdata);
             //5.Show Value
             CUTeffi_DrillingModule.Xpos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(0).ToString();
-            CUTeffi_DrillingModule.Ypos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(1).ToString();
+            CUTeffi_DrillingModule.Ypos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(1).ToString();            
             //tbMachZ.Text = (mach_pos.Value as Array).GetValue(2).ToString();
             CUTeffi_DrillingModule.Spindle_rpm.Text = CUTeffi_DrillingModule.sCode.Value.ToString();
             CUTeffi_DrillingModule.Feedrate.Text = CUTeffi_DrillingModule.fCode.Value.ToString();
             //及時監控
-            if (rms_xdata > 0.2)
+            if (Convert.ToInt32(CUTeffi_DrillingModule.Spindle_rpm.Text) >50)
             {
                 if (rms_zdata > rms_xdata)
                 {
@@ -212,31 +216,35 @@ namespace DrillingDetector
                 }
             }
             //存檔區
-
-            SW_RMSData.Write(vecTime[0]);
-            SW_RMSData.Write(",");
-            SW_RMSData.Write(CUTeffi_DrillingModule.Xpos.Text);
-            SW_RMSData.Write(",");
-            SW_RMSData.Write(CUTeffi_DrillingModule.Ypos.Text);
-            SW_RMSData.Write(",");
-            SW_RMSData.Write(CUTeffi_DrillingModule.Spindle_rpm.Text);
-            SW_RMSData.Write(",");
-            SW_RMSData.Write(CUTeffi_DrillingModule.Feedrate.Text);
-            SW_RMSData.WriteLine(rms_zdata);
-            for (int i = 0; i < zdata.Length; i++)
+            if (rms_zdata > 0.25)
             {
-                SW_RawData.Write(vecTime[i]);
-                SW_RawData.Write(",");
-                SW_RawData.Write(CUTeffi_DrillingModule.Xpos.Text);
-                SW_RawData.Write(",");
-                SW_RawData.Write(CUTeffi_DrillingModule.Ypos.Text);
-                SW_RawData.Write(",");
-                SW_RawData.Write(CUTeffi_DrillingModule.Spindle_rpm.Text);
-                SW_RawData.Write(",");
-                SW_RawData.Write(CUTeffi_DrillingModule.Feedrate.Text);
-                SW_RawData.Write(",");
-                SW_RawData.WriteLine(zdata[i]);
+                SW_RMSData.Write(vecTime[0]);
+                SW_RMSData.Write(",");
+                SW_RMSData.Write(CUTeffi_DrillingModule.Xpos.Text);
+                SW_RMSData.Write(",");
+                SW_RMSData.Write(CUTeffi_DrillingModule.Ypos.Text);
+                SW_RMSData.Write(",");
+                SW_RMSData.Write(CUTeffi_DrillingModule.Spindle_rpm.Text);
+                SW_RMSData.Write(",");
+                SW_RMSData.Write(CUTeffi_DrillingModule.Feedrate.Text);
+                SW_RMSData.Write(",");
+                SW_RMSData.WriteLine(rms_zdata);
+                for (int i = 0; i < zdata.Length; i++)
+                {
+                    SW_RawData.Write(vecTime[i]);
+                    SW_RawData.Write(",");
+                    SW_RawData.Write(CUTeffi_DrillingModule.Xpos.Text);
+                    SW_RawData.Write(",");
+                    SW_RawData.Write(CUTeffi_DrillingModule.Ypos.Text);
+                    SW_RawData.Write(",");
+                    SW_RawData.Write(CUTeffi_DrillingModule.Spindle_rpm.Text);
+                    SW_RawData.Write(",");
+                    SW_RawData.Write(CUTeffi_DrillingModule.Feedrate.Text);
+                    SW_RawData.Write(",");
+                    SW_RawData.WriteLine(zdata[i]);
+                }
             }
+            
         }
         public void processRed()
         {
