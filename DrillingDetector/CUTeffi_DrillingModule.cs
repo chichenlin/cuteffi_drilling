@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using Itri.Vmx.Host;
 using Itri.Vmx.Cnc;
+using Itri.Vmx.Plc;
 using System.ComponentModel.Composition;
 using System.Threading;
 
@@ -36,18 +37,28 @@ namespace DrillingDetector
         //{
         //    return true;
         //}
-        public static CncAdaptor cnc = null;
+        //public static CncAdaptor cnc = null;
+        public static Vmx2Fanuc30D cnc;
+
+
         public bool Initialize(IVmxHost host)
         {
-            if (host.CncAdaptors.Length != 0)
-            {
-                cnc = host.CncAdaptors[0];
-            }
+            cnc = new Vmx2Fanuc30D();
+            ConnectingSettingCollection settings = cnc.ConnectingSetting;
+            settings["IP"] = "192.168.31.5";
+            settings["Port"] = "8193";
+            cnc.ConnectingSetting = settings;
+            cnc.Connect();
+            //if (host.CncAdaptors.Length != 0)
+            //{
+            //    cnc = host.CncAdaptors[0];
+            //}
             return true;
         }
         public static DataItem mach_pos = new DataItem();
         public static DataItem sCode = new DataItem();
         public static DataItem fCode = new DataItem();
+        public static DataItem CNCPLC = new DataItem();
 
         public CUTeffi_DrillingModule()
         {
@@ -71,10 +82,12 @@ namespace DrillingDetector
             pictureBox5.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_graylight.png");
 
             //  3. Set DataItem Path
-            mach_pos.Path = "/axes/MachineryPositions";
+            mach_pos.Path = "/axes/AbsolutePositions";
             sCode.Path = "/controller/SpindleSpeedCmd";
             fCode.Path = "/controller/feedrateCmd";
-            
+            CNCPLC.Path ="/Plc/Fanuc";
+         
+
 
         }
 
@@ -83,10 +96,11 @@ namespace DrillingDetector
             string s = Application.StartupPath;////
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = "c:\\";
+            sfd.InitialDirectory = "C:\\Users\\User\\Desktop\\";
             sfd.Filter = "txt files (*.txt)|*.txt";
             sfd.ShowDialog();
             string saveNC = sfd.FileName;
+            
 
             if (string.IsNullOrEmpty(saveNC)) { }
             else
@@ -98,7 +112,14 @@ namespace DrillingDetector
                 double Ypos_opt = Convert.ToDouble(label15.Text);
                 nc.editNC_opt(maxSP, FeedperRotation, Xpos_opt, Ypos_opt, s, saveNC);  //textbox4: maximum spindle speed, textbox3: cutting depth, textbox5: tool number
                 Thread.Sleep(1000);
+                string sourcePath = saveNC;
+                string destinationPath = "O0106";
+                bool result=cnc.UploadFile(sourcePath, destinationPath);
+                //sourcePath：檔案絕對路徑
+                //destinationPath：上傳的檔名(Fanuc的命名方式)
             }
+
+
         }
 
         private void button_drillNC_Click(object sender, EventArgs e)
@@ -106,7 +127,7 @@ namespace DrillingDetector
             string s = Application.StartupPath;////
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = "c:\\";
+            sfd.InitialDirectory = "C:\\Users\\User\\Desktop\\";
             sfd.Filter = "txt files (*.txt)|*.txt";
             sfd.ShowDialog();
             string saveNC = sfd.FileName;
@@ -120,7 +141,14 @@ namespace DrillingDetector
                 double cutdepth = Convert.ToDouble(textBox7.Text);
                 nc.editNC_dodrill(optSP, FeedperRotation,cutdepth, s, saveNC);  //textbox4: maximum spindle speed, textbox3: cutting depth, textbox5: tool number
                 Thread.Sleep(1000);
+                string sourcePath = saveNC;
+                string destinationPath = "O0107";
+                cnc.UploadFile(sourcePath, destinationPath);
+                //cnc.DownloadFile(destinationPath,sourcePath);
+                //sourcePath：檔案絕對路徑
+                //destinationPath：上傳的檔名(Fanuc的命名方式)
             }
+
         }
 
         private void button1_Click(object sender, EventArgs e)

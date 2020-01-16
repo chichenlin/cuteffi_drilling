@@ -42,8 +42,8 @@ namespace DrillingDetector
         public double[] vecTime, xdata, ydata, zdata, vecSP;
         public double rms_xdata, rms_ydata, rms_zdata;
         public int startstate = 0, indexP;
+        public string Zpos;
 
-       
         [STAThread]
         public void StartSampling()
         {
@@ -80,7 +80,7 @@ namespace DrillingDetector
             {
                 if (chan[i] == 1)
                 {
-                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ2Mod1/ai" + Convert.ToString(i), "",
+                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ1Mod1/ai" + Convert.ToString(i), "",
                         terminalConfiguration, Vmin, Vmax, sen, sensitivityUnits, excitationSource,
                         EVN, AIAccelerationUnits.G);
                     aiChannel.Coupling = inputCoupling;
@@ -193,8 +193,8 @@ namespace DrillingDetector
             CUTeffi_DrillingModule.aGauge.Value = Convert.ToSingle(rms_zdata);
             //5.Show Value
             CUTeffi_DrillingModule.Xpos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(0).ToString();
-            CUTeffi_DrillingModule.Ypos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(1).ToString();            
-            //tbMachZ.Text = (mach_pos.Value as Array).GetValue(2).ToString();
+            CUTeffi_DrillingModule.Ypos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(1).ToString();
+            Zpos = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(2).ToString();
             CUTeffi_DrillingModule.Spindle_rpm.Text = CUTeffi_DrillingModule.sCode.Value.ToString();
             CUTeffi_DrillingModule.Feedrate.Text = CUTeffi_DrillingModule.fCode.Value.ToString();
             //及時監控
@@ -206,7 +206,7 @@ namespace DrillingDetector
                     {
                         processRed();
                         Stopsampling();
-                        Move_Spindle();
+                        //Move_Spindle();
                         return;
                     }
                 }
@@ -216,7 +216,7 @@ namespace DrillingDetector
                 }
             }
             //存檔區
-            if (rms_zdata > 0.25)
+            if (rms_zdata > 0) //rms_zdata > 0.25 && Convert.ToDouble(Zpos) <= 10
             {
                 SW_RMSData.Write(vecTime[0]);
                 SW_RMSData.Write(",");
@@ -259,9 +259,16 @@ namespace DrillingDetector
 
         private static void Move_Spindle()
         {
+            //控制PLC寫入
+            CUTeffi_DrillingModule.CNCPLC.Parameter[0] = "byte";
+            CUTeffi_DrillingModule.CNCPLC.Parameter[1] = "G12";
+            CUTeffi_DrillingModule.CNCPLC.Value = 90;
+            int errorCode = CUTeffi_DrillingModule.cnc.WriteDataItem(CUTeffi_DrillingModule.CNCPLC);
+            //
             //Z軸Feed = 0
             //Z軸往上拉
             //Spindle Rotation = 0
+            //alarm、緊急停止
             //紀錄X、Y座標
             //移動X、Y軸至門口
         }

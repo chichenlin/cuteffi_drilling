@@ -63,6 +63,9 @@
     <Reference Include="Itri.Vmx.App">
       <HintPath>D:\VMX Host\Itri.Vmx.App.dll</HintPath>
     </Reference>
+    <Reference Include="Itri.Vmx.Cnc.Vmx2Fanuc30D">
+      <HintPath>D:\VMX Host\Api\Itri.Vmx.Cnc.Vmx2Fanuc30D.dll</HintPath>
+    </Reference>
     <Reference Include="IVmx2Cnc">
       <HintPath>D:\VMX Host\IVmx2Cnc.dll</HintPath>
     </Reference>
@@ -87,7 +90,6 @@
   <ItemGroup>
     <Compile Include="EditNC.cs" />
     <Compile Include="Vibration_Monitor.cs" />
-    <Compile Include="CUTeffi_opt.cs" />
     <Compile Include="CUTeffi_DrillingModule.cs">
       <SubType>Form</SubType>
     </Compile>
