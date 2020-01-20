@@ -12,7 +12,7 @@ namespace DrillingDetector
         List<string> NCi = new List<string>();
         public StreamReader sr;
 
-        public void editNC_opt(double maxSP, double FeedperRotation, double Xpos, double Ypos, string s, string saveNC)
+        public void editNC_opt(double maxSP, double FeedperRotation, double Xpos, double Ypos, double toolnumber,double cutdepth,string s, string saveNC)
         {
 
             //string fileName = "D4000426_2.cnc";
@@ -39,7 +39,7 @@ namespace DrillingDetector
 
             }
 
-            EditNc_opt(maxSP, FeedperRotation, Xpos,Ypos);
+            EditNc_opt(maxSP, FeedperRotation, Xpos,Ypos,toolnumber,cutdepth);
 
             writeNC(saveNC);
 
@@ -49,7 +49,7 @@ namespace DrillingDetector
         }
 
         
-        private void EditNc_opt(double maxSP, double FeedperRotation, double Xpos, double Ypos)
+        private void EditNc_opt(double maxSP, double FeedperRotation, double Xpos, double Ypos,double toolnumber,double cutdepth)
         {
             string[] split;
 
@@ -77,8 +77,6 @@ namespace DrillingDetector
                             line = "#" + filter[ii] + "=" + Convert.ToString(maxSP) + "(" + filter[ii + 2];////
 
                             NCi[i] = line;
-
-
                         }
                         if (ii == 1 & filter[ii] == "2")
                         {
@@ -86,8 +84,6 @@ namespace DrillingDetector
                             line = "#" + filter[ii] + "=" + Convert.ToString(FeedperRotation) + "(" + filter[ii + 2];////
 
                             NCi[i] = line;
-
-
                         }
                         if (ii == 1 & filter[ii] == "3")
                         {
@@ -95,8 +91,6 @@ namespace DrillingDetector
                             line = "#" + filter[ii] + "=" + Convert.ToString(Xpos) + "(" + filter[ii + 2];////
 
                             NCi[i] = line;
-
-
                         }
                         if (ii == 1 & filter[ii] == "4")
                         {
@@ -104,8 +98,20 @@ namespace DrillingDetector
                             line = "#" + filter[ii] + "=" + Convert.ToString(Ypos) + "(" + filter[ii + 2];////
 
                             NCi[i] = line;
+                        }
+                        if (ii == 1 & filter[ii] == "6")
+                        {
 
+                            line = "#" + filter[ii] + "=" + Convert.ToString(toolnumber) + "(" + filter[ii + 2];////
 
+                            NCi[i] = line;
+                        }
+                        if (ii == 1 & filter[ii] == "7")
+                        {
+
+                            line = "#" + filter[ii] + "=" + Convert.ToString(cutdepth) + "(" + filter[ii + 2];////
+
+                            NCi[i] = line;
                         }
 
                         line = "";

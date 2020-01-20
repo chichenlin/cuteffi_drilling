@@ -27,7 +27,7 @@ namespace DrillingDetector
         public static AGauge aGauge;
         public static PictureBox pictureBox;
         public static TextBox threshold,RPMmax,CutPerRPM;
-        public static Label Feedrate, Spindle_rpm,Xpos,Ypos;
+        public static Label Feedrate, Spindle_code,Xpos,Ypos;
         public static CheckBox opt_checkbox;
         Vibration_Monitor Vibration_monitor = new Vibration_Monitor();
 
@@ -45,10 +45,11 @@ namespace DrillingDetector
         {
             cnc = new Vmx2Fanuc30D();
             ConnectingSettingCollection settings = cnc.ConnectingSetting;
-            settings["IP"] = "192.168.31.5";
+            settings["IP"] = "192.168.10.1";
             settings["Port"] = "8193";
             cnc.ConnectingSetting = settings;
             cnc.Connect();
+            bool result1 = cnc.IsConnected;
             //if (host.CncAdaptors.Length != 0)
             //{
             //    cnc = host.CncAdaptors[0];
@@ -56,6 +57,7 @@ namespace DrillingDetector
             return true;
         }
         public static DataItem mach_pos = new DataItem();
+        public static DataItem spindlespeed = new DataItem();
         public static DataItem sCode = new DataItem();
         public static DataItem fCode = new DataItem();
         public static DataItem CNCPLC = new DataItem();
@@ -69,7 +71,7 @@ namespace DrillingDetector
             RPMmax = this.textBox4;
             CutPerRPM = this.textBox6;
             Feedrate = this.label4;
-            Spindle_rpm = this.label3;
+            Spindle_code = this.label3;
             Xpos = this.label9;
             Ypos = this.label15;
             opt_checkbox = this.optimization_checkbox;
@@ -83,6 +85,7 @@ namespace DrillingDetector
 
             //  3. Set DataItem Path
             mach_pos.Path = "/axes/AbsolutePositions";
+            spindlespeed.Path = "/Spindle/ActualSpeed";
             sCode.Path = "/controller/SpindleSpeedCmd";
             fCode.Path = "/controller/feedrateCmd";
             CNCPLC.Path ="/Plc/Fanuc";
@@ -110,11 +113,13 @@ namespace DrillingDetector
                 double FeedperRotation = Convert.ToDouble(textBox6.Text);
                 double Xpos_opt = Convert.ToDouble(label9.Text);
                 double Ypos_opt = Convert.ToDouble(label15.Text);
-                nc.editNC_opt(maxSP, FeedperRotation, Xpos_opt, Ypos_opt, s, saveNC);  //textbox4: maximum spindle speed, textbox3: cutting depth, textbox5: tool number
+                double cutdepth = Convert.ToDouble(textBox7.Text);
+                double toolnumber = Convert.ToDouble(textBox8.Text);
+                nc.editNC_opt(maxSP, FeedperRotation, Xpos_opt, Ypos_opt,toolnumber, cutdepth, s, saveNC);  //textbox4: maximum spindle speed, textbox3: cutting depth, textbox5: tool number
                 Thread.Sleep(1000);
                 string sourcePath = saveNC;
                 string destinationPath = "O0106";
-                bool result=cnc.UploadFile(sourcePath, destinationPath);
+                bool result2=cnc.UploadFile(sourcePath, destinationPath);
                 //sourcePath：檔案絕對路徑
                 //destinationPath：上傳的檔名(Fanuc的命名方式)
             }
@@ -191,32 +196,18 @@ namespace DrillingDetector
             {
                 pictureBox3.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_ButtonTestStop.png");
                 optimization_checkbox.Enabled = false;
-                button1.Enabled = false;
+
                 startstate = 1;
+                panelSetting.Enabled = false;
                 Vibration_monitor.StartSampling();
-                //if (optimization_checkbox.Checked == true)
-                //{
-                //    Vibration_monitor.CUTeffi_OPT();
-                //}
-                //else
-                //{
-                //    Vibration_monitor.Monitor();
-                //}
-
-                ////4.Read Value
-                //cnc.ReadDataItem(ref mach_pos);
-                //cnc.ReadDataItem(ref sCode);
-                //cnc.ReadDataItem(ref fCode);
-
-
-
             }
             else if (startstate ==1)
             {
                 pictureBox3.Image = Image.FromFile(System.Environment.CurrentDirectory + "\\image\\image_ButtonTestStart.png");
                 optimization_checkbox.Enabled = true;
-                button1.Enabled = true;
+
                 startstate = 0;
+                panelSetting.Enabled = true;
                 Vibration_monitor.Stopsampling();
                 aGauge1.Value = 0;
                 

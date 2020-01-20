@@ -80,7 +80,7 @@ namespace DrillingDetector
             {
                 if (chan[i] == 1)
                 {
-                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ1Mod1/ai" + Convert.ToString(i), "",
+                    aiChannel = myTask.AIChannels.CreateAccelerometerChannel("cDAQ2Mod1/ai" + Convert.ToString(i), "",
                         terminalConfiguration, Vmin, Vmax, sen, sensitivityUnits, excitationSource,
                         EVN, AIAccelerationUnits.G);
                     aiChannel.Coupling = inputCoupling;
@@ -133,6 +133,7 @@ namespace DrillingDetector
                 CUTeffi_DrillingModule.cnc.ReadDataItem(ref CUTeffi_DrillingModule.mach_pos);
                 CUTeffi_DrillingModule.cnc.ReadDataItem(ref CUTeffi_DrillingModule.sCode);
                 CUTeffi_DrillingModule.cnc.ReadDataItem(ref CUTeffi_DrillingModule.fCode);
+                CUTeffi_DrillingModule.cnc.ReadDataItem(ref CUTeffi_DrillingModule.spindlespeed);
                 if (CUTeffi_DrillingModule.opt_checkbox.Checked == true)
                 {
                     CUTeffi_OPT();
@@ -195,10 +196,10 @@ namespace DrillingDetector
             CUTeffi_DrillingModule.Xpos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(0).ToString();
             CUTeffi_DrillingModule.Ypos.Text = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(1).ToString();
             Zpos = (CUTeffi_DrillingModule.mach_pos.Value as Array).GetValue(2).ToString();
-            CUTeffi_DrillingModule.Spindle_rpm.Text = CUTeffi_DrillingModule.sCode.Value.ToString();
+            CUTeffi_DrillingModule.Spindle_code.Text = CUTeffi_DrillingModule.sCode.Value.ToString();
             CUTeffi_DrillingModule.Feedrate.Text = CUTeffi_DrillingModule.fCode.Value.ToString();
             //及時監控
-            if (Convert.ToInt32(CUTeffi_DrillingModule.Spindle_rpm.Text) >50)
+            if (Convert.ToInt32(CUTeffi_DrillingModule.spindlespeed.Value) >50)
             {
                 if (rms_zdata > rms_xdata)
                 {
@@ -216,7 +217,7 @@ namespace DrillingDetector
                 }
             }
             //存檔區
-            if (rms_zdata > 0) //rms_zdata > 0.25 && Convert.ToDouble(Zpos) <= 10
+            if (rms_zdata > 0.25 && Convert.ToDouble(Zpos) < 10) //rms_zdata > 0.25 && Convert.ToDouble(Zpos) <= 10
             {
                 SW_RMSData.Write(vecTime[0]);
                 SW_RMSData.Write(",");
@@ -224,7 +225,7 @@ namespace DrillingDetector
                 SW_RMSData.Write(",");
                 SW_RMSData.Write(CUTeffi_DrillingModule.Ypos.Text);
                 SW_RMSData.Write(",");
-                SW_RMSData.Write(CUTeffi_DrillingModule.Spindle_rpm.Text);
+                SW_RMSData.Write(CUTeffi_DrillingModule.Spindle_code.Text);
                 SW_RMSData.Write(",");
                 SW_RMSData.Write(CUTeffi_DrillingModule.Feedrate.Text);
                 SW_RMSData.Write(",");
@@ -237,7 +238,7 @@ namespace DrillingDetector
                     SW_RawData.Write(",");
                     SW_RawData.Write(CUTeffi_DrillingModule.Ypos.Text);
                     SW_RawData.Write(",");
-                    SW_RawData.Write(CUTeffi_DrillingModule.Spindle_rpm.Text);
+                    SW_RawData.Write(CUTeffi_DrillingModule.Spindle_code.Text);
                     SW_RawData.Write(",");
                     SW_RawData.Write(CUTeffi_DrillingModule.Feedrate.Text);
                     SW_RawData.Write(",");
@@ -261,7 +262,7 @@ namespace DrillingDetector
         {
             //控制PLC寫入
             CUTeffi_DrillingModule.CNCPLC.Parameter[0] = "byte";
-            CUTeffi_DrillingModule.CNCPLC.Parameter[1] = "G12";
+            CUTeffi_DrillingModule.CNCPLC.Parameter[1] = "G8.4";
             CUTeffi_DrillingModule.CNCPLC.Value = 90;
             int errorCode = CUTeffi_DrillingModule.cnc.WriteDataItem(CUTeffi_DrillingModule.CNCPLC);
             //
@@ -296,7 +297,7 @@ namespace DrillingDetector
             }
             //StartSampling();
             CUTeffi_DrillingModule.aGauge.Value = Convert.ToSingle(rms_zdata);
-            if (rms_zdata > 0.25) // 閥值定義：轉與不轉振動量大小 && entropy[0] < threshold_entropy
+            if (rms_zdata > 0.25 && Convert.ToDouble(Zpos) < 10) // 閥值定義：轉與不轉振動量大小 && Z軸位置
             {
                 if (iii == 3)//穩定大於閥值0.3秒後，紀錄當下時間
                 {
@@ -464,7 +465,7 @@ namespace DrillingDetector
             OptimizedSP[0] = vecSP[varB];
             arrayB[varB] = 1000000000;
             //}
-            CUTeffi_DrillingModule.Spindle_rpm.Text = Convert.ToString(OptimizedSP[0]);
+            CUTeffi_DrillingModule.Spindle_code.Text = Convert.ToString(OptimizedSP[0]);
             CUTeffi_DrillingModule.Feedrate.Text = Convert.ToString(OptimizedSP[0] * Convert.ToInt32(CUTeffi_DrillingModule.CutPerRPM.Text));
             //return OptimizedSP;
             //double[] A = CUTeffiForm.A;
